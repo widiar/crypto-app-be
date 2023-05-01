@@ -36,7 +36,12 @@ public class SaldoService {
         User user = userRepository.findByUsername(userDetail.getUsername());
         ResponseSaldoDto responseSaldoDto = new ResponseSaldoDto();
         responseSaldoDto.setUsername(user.getUsername());
-        responseSaldoDto.setTotalSaldo(user.getSaldo().getJumlah());
+        Saldo saldo = user.getSaldo();
+        if (saldo != null) {
+            responseSaldoDto.setTotalSaldo(user.getSaldo().getJumlah());
+        }else{
+            responseSaldoDto.setTotalSaldo(0D);
+        }
         return responseSaldoDto;
     }
 }

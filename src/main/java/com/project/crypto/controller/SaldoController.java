@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/saldo")
-@CrossOrigin
 public class SaldoController {
 
 
@@ -34,7 +33,8 @@ public class SaldoController {
         return ResponseEntity.ok("success");
     }
 
-    @GetMapping
+    @CrossOrigin
+    @GetMapping()
     public ResponseEntity<ResponseSaldoDto> inquiry(
             @AuthenticationPrincipal UserDetail userDetail
     ){
