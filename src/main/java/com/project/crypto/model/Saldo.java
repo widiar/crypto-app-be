@@ -1,6 +1,5 @@
 package com.project.crypto.model;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -12,18 +11,16 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class User {
+public class Saldo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String username;
-    private String email;
-    private String fullName;
-    private String role;
-    private String password;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonBackReference
+    private User user;
 
-    @OneToOne(mappedBy = "user")
-    private Saldo saldo;
+    private Double jumlah;
 }
