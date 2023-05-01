@@ -18,7 +18,7 @@ public class SaldoService {
     @Autowired
     UserRepository userRepository;
 
-    public String topup(Double jumlah, UserDetail userDetail){
+    public void topup(Double jumlah, UserDetail userDetail){
         User user = userRepository.findByUsername(userDetail.getUsername());
         Saldo saldo = user.getSaldo();
         if (saldo != null) {
@@ -30,7 +30,6 @@ public class SaldoService {
             newSaldo.setJumlah(jumlah);
             saldoRepository.save(newSaldo);
         }
-        return "success";
     }
 
     public ResponseSaldoDto inquiry(UserDetail userDetail){
