@@ -7,4 +7,4 @@ Aplikasi untuk menyelesaikan project training
 - Run
 
 # UI
-## crytp-app-tr.web.app
+## [Crypto-App](https://crypto-app-tr.web.app/)
