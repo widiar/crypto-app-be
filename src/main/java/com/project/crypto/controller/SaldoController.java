@@ -1,5 +1,6 @@
 package com.project.crypto.controller;
 
+import com.project.crypto.config.LoggingConfig;
 import com.project.crypto.dto.ResponseSaldoDto;
 import com.project.crypto.dto.SaldoDto;
 import com.project.crypto.model.UserDetail;
@@ -18,17 +19,18 @@ import org.springframework.web.bind.annotation.*;
 public class SaldoController {
 
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
-
     @Autowired
     SaldoService saldoService;
+    
+    @Autowired
+    private LoggingConfig logCryp;
 
     @PostMapping
     public ResponseEntity<String> topup(
             @RequestBody SaldoDto saldo,
             @AuthenticationPrincipal UserDetail userDetail
     ){
-        LOG.info(saldo.getJumlah().toString());
+    	logCryp.logCrypBe.info(saldo.getJumlah().toString());
         saldoService.topup(saldo.getJumlah(), userDetail);
         return ResponseEntity.ok("success");
     }

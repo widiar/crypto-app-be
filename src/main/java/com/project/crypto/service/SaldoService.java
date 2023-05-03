@@ -44,4 +44,18 @@ public class SaldoService {
         }
         return responseSaldoDto;
     }
+    
+    public void updateSaldo(UserDetail userDetail, Double amount) {
+    	User user = userRepository.findByUsername(userDetail.getUsername());
+    	Saldo saldo = user.getSaldo();
+    	saldo.setJumlah(saldo.getJumlah()+amount);
+    	saldoRepository.save(saldo);
+    }
+    
+    public void penguranganSaldo(UserDetail userDetail, Double amount) {
+    	User user = userRepository.findByUsername(userDetail.getUsername());
+    	Saldo saldo = user.getSaldo();
+    	saldo.setJumlah(saldo.getJumlah()-amount);
+    	saldoRepository.save(saldo);
+    }
 }

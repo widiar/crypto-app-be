@@ -1,5 +1,6 @@
 package com.project.crypto.controller;
 
+import com.project.crypto.config.LoggingConfig;
 import com.project.crypto.dto.AuthCheckDto;
 import com.project.crypto.dto.LoginDTO;
 import com.project.crypto.model.User;
@@ -21,10 +22,15 @@ public class AuthController {
 
     @Autowired
     AuthService authService;
+    
+    @Autowired
+    private LoggingConfig logCryp;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO){
+    	logCryp.logCrypBe.info("User ini login: " +loginDTO.getUsername());
         String status = authService.login(loginDTO);
+        logCryp.logCrypBe.info("login status: "+status);
         if (status != null) {
             return ResponseEntity.ok(status);
         }
@@ -34,6 +40,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user){
         String status = authService.register(user);
+        logCryp.logCrypBe.info("status: "+status);
         return ResponseEntity.ok(status);
     }
 

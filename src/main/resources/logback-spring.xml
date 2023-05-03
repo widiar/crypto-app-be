@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <property file="./conf/application.properties" />
+    <appender name="crypBe-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGFOLDER}crypto_be.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOGFOLDER}%d{yyyy-MM-dd}-crypto_be.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>10</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date %-5level %logger{36}:%L - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="crypApi" level="INFO" additivity="false">
+        <appender-ref ref="crypBe-FILE"/>
+    </logger>
+    <!-- ########################### Writing spring boot log to file ###########################-->
+    <appender name="SPRING-BOOT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGFOLDER}SPRINGBOOT.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOGFOLDER}%d{yyyy-MM-dd}-SPRINGBOOT.%i.log</fileNamePattern>
+            <maxFileSize>2MB</maxFileSize>
+            <!-- keep 15 days' worth of history -->
+            <maxHistory>5</maxHistory>
+            <totalSizeCap>10MB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date %-5level %logger{36}:%L - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.springframework" level="INFO" additivity="false">
+        <appender-ref ref="SPRING-BOOT"/>
+    </logger>
+</configuration>
