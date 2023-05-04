@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
-    <property file="./conf/application.properties" />
+    <property file="./src/main/resources/application.properties" />
     <appender name="crypBe-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOGFOLDER}crypto_be.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
