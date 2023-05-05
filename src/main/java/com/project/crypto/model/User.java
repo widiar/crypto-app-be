@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -25,4 +27,7 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private Saldo saldo;
+
+    @OneToMany(mappedBy = "user")
+    List<CryptoUser> cryptoUsers;
 }

@@ -2,12 +2,10 @@ package com.project.crypto.model;
 
 import java.util.Date;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,19 +13,26 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Table(name="crypto_user")
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CryptoUser {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id")
-	private int id;
-	@Column(name="user_id")
-	private int userId;
+	private Integer id;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	@JsonBackReference
+	private User user;
+
 	@Column(name="nama_crypto")
 	private String namaCrypto;
 	@Column(name="harga")
 	private Double harga;
 	@Column(name="tgl_beli")
 	private Date tglBeli;
+
+	private Long jumlah;
 
 }

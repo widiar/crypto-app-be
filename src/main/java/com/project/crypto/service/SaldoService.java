@@ -1,11 +1,13 @@
 package com.project.crypto.service;
 
 import com.project.crypto.config.LoggingConfig;
+import com.project.crypto.dto.RequestCrypto;
 import com.project.crypto.dto.ResponseSaldoDto;
 import com.project.crypto.model.CryptoUser;
 import com.project.crypto.model.Saldo;
 import com.project.crypto.model.User;
 import com.project.crypto.model.UserDetail;
+import com.project.crypto.repository.CryptoUserRepository;
 import com.project.crypto.repository.SaldoRepository;
 import com.project.crypto.repository.UserRepository;
 
@@ -24,6 +26,9 @@ public class SaldoService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    CryptoUserRepository cryptoUser;
     
     @Autowired
     private LoggingConfig logCryp;
@@ -62,7 +67,10 @@ public class SaldoService {
     }
     
     public void updateSaldo(UserDetail userDetail, Double amount) {
-    	saldoRepository.updateSaldoAdmin(amount);
+//    	saldoRepository.updateSaldoAdmin(amount);
+        User user = userRepository.findByRole("admin");
+        user.getSaldo().setJumlah(user.getSaldo().getJumlah() + amount);
+        userRepository.save(user);
     	logCryp.logCrypBe.info("Penambahan Saldo Admin Berhasil");
     }
     
@@ -72,18 +80,27 @@ public class SaldoService {
     	logCryp.logCrypBe.info("Pengurangan Saldo User "+userDetail.getUsername()+ " Berhasil");
     }
     
-    public void addPortfolioNasabah(UserDetail userDetail, Double hargaCrypto, String namaCrypto) {
+    public void addPortfolioNasabah(UserDetail userDetail, Double hargaCrypto, String  namaCrypto, Long jumlah) {
     	try {
     		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         	Date date = new Date();
         	logCryp.logCrypBe.info("buy date: "+date);
-        	int user_id = saldoRepository.user_id(userDetail.getUsername());
-        	CryptoUser cu = new CryptoUser();
-        	cu.setUserId(user_id);
-        	cu.setNamaCrypto(namaCrypto);
-        	cu.setHarga(hargaCrypto);
-        	cu.setTglBeli(date);
-        	saldoRepository.save(cu);
+//        	int user_id = saldoRepository.user_id(userDetail.getUsername());
+            User user = userRepository.findByUsername(userDetail.getUsername());
+            CryptoUser cryptoUsr = cryptoUser.findByUserIdAndNamaCrypto(user.getId(), namaCrypto);
+            if (cryptoUsr != null) {
+                cryptoUsr.setHarga(hargaCrypto);
+                cryptoUsr.setJumlah(cryptoUsr.getJumlah() + jumlah);
+                cryptoUser.save(cryptoUsr);
+            }else{
+                CryptoUser cu = new CryptoUser();
+                cu.setUser(user);
+                cu.setNamaCrypto(namaCrypto);
+                cu.setHarga(hargaCrypto);
+                cu.setTglBeli(date);
+                cu.setJumlah(jumlah);
+                cryptoUser.save(cu);
+            }
         	logCryp.logCrypBe.info("Add Portofolio user "+userDetail.getUsername()+" Berhasil.");
     	} catch (Exception e) {
 			logCryp.logCrypBe.error("Error add Postofolio "+e);
@@ -92,17 +109,22 @@ public class SaldoService {
     
     public Double saldoAdmin() {
     	logCryp.logCrypBe.info("get saldo admin");
-    	Double saldoAdmin = saldoRepository.saldoAdmin();
-    	return saldoAdmin;
+//    	Double saldoAdmin = saldoRepository.saldoAdmin();
+        User user = userRepository.findByRole("admin");
+    	return user.getSaldo().getJumlah();
     }
     
-    public void penambahanSaldoUser(Double hargaCrypro, int user_id) {
-    	logCryp.logCrypBe.info("Penambahan Saldo "+user_id+" sebesar "+hargaCrypro);
+    public void penambahanSaldoUser(Double hargaCrypro, String username) {
+        Integer user_id = userRepository.findByUsername(username).getId();
+        logCryp.logCrypBe.info("Penambahan Saldo "+user_id+" sebesar "+hargaCrypro);
     	saldoRepository.penambahanSaldoUser(hargaCrypro, user_id);
     }
     
     public void penguranganSaldoAdmin(Double hargaCrypto) {
     	logCryp.logCrypBe.info("Pengurangan Saldo Admin");
-    	saldoRepository.penguranganSaldoAdmin(hargaCrypto);
+        User user = userRepository.findByRole("admin");
+        user.getSaldo().setJumlah(user.getSaldo().getJumlah() - hargaCrypto);
+        userRepository.save(user);
+//    	saldoRepository.penguranganSaldoAdmin(hargaCrypto);
     }
 }

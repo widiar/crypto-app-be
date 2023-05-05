@@ -3,6 +3,7 @@ package com.project.crypto.controller;
 import com.project.crypto.config.LoggingConfig;
 import com.project.crypto.dto.AuthCheckDto;
 import com.project.crypto.dto.LoginDTO;
+import com.project.crypto.dto.ResponseLoginDto;
 import com.project.crypto.model.User;
 import com.project.crypto.model.UserDetail;
 import com.project.crypto.service.AuthService;
@@ -27,14 +28,14 @@ public class AuthController {
     private LoggingConfig logCryp;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO){
+    public ResponseEntity<ResponseLoginDto> login(@RequestBody LoginDTO loginDTO){
     	logCryp.logCrypBe.info("User ini login: " +loginDTO.getUsername());
-        String status = authService.login(loginDTO);
+        ResponseLoginDto status = authService.login(loginDTO);
         logCryp.logCrypBe.info("login status: "+status);
-        if (status != null) {
+        if (status.getRole() != null) {
             return ResponseEntity.ok(status);
         }
-        return new ResponseEntity<>("Username / password salah",HttpStatusCode.valueOf(400));
+        return new ResponseEntity<>(status,HttpStatusCode.valueOf(400));
     }
 
     @PostMapping("/register")

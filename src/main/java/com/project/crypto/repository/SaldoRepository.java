@@ -1,6 +1,5 @@
 package com.project.crypto.repository;
 
-import com.project.crypto.model.CryptoUser;
 import com.project.crypto.model.Saldo;
 
 import jakarta.transaction.Transactional;
@@ -29,8 +28,6 @@ public interface SaldoRepository extends JpaRepository<Saldo, Integer> {
 	
 	@Query(value="Select id from user where username=?", nativeQuery=true)
 	int user_id(String username);
-
-	void save(CryptoUser cu);
 	
 	@Query(value="select jumlah from saldo where user_id=2", nativeQuery=true)
 	Double saldoAdmin();
