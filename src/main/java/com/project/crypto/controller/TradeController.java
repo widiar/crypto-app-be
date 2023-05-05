@@ -89,17 +89,14 @@ public class TradeController {
 			logCryp.logCrypBe.info("tidak dapat melakukan penjualan");
 		} else {
 			//penambahan saldo user
+			logCryp.logCrypBe.info("cryptoUser:"+cryptoUser);
 			int user_id = cryptoUser.getUserId();
-			System.out.println("1");
 			saldoService.penambahanSaldoUser(cryptoUser.getHarga(), user_id);
 			//pengurangan saldo admin
-			System.out.println("2");
 			saldoService.penguranganSaldoAdmin(cryptoUser.getHarga());
 			//penghapusan txn di portofolio
-			System.out.println("3");
 			cryptoUserService.deleteTxn(id);
 			//penambahan jumlah crypto
-			System.out.println("4");
 			String url = baseUrl + "crypto/plus/" +id;
 			HttpHeaders headers = new HttpHeaders();
 	        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));

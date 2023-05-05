@@ -97,12 +97,12 @@ public class SaldoService {
     }
     
     public void penambahanSaldoUser(Double hargaCrypro, int user_id) {
-    	logCryp.logCrypBe.info("Penambahan Saldo "+user_id);
+    	logCryp.logCrypBe.info("Penambahan Saldo "+user_id+" sebesar "+hargaCrypro);
     	saldoRepository.penambahanSaldoUser(hargaCrypro, user_id);
     }
     
     public void penguranganSaldoAdmin(Double hargaCrypto) {
-    	logCryp.logCrypBe.info("Pengrangan Saldo Admin");
+    	logCryp.logCrypBe.info("Pengurangan Saldo Admin");
     	saldoRepository.penguranganSaldoAdmin(hargaCrypto);
     }
 }
