@@ -3,6 +3,7 @@ package com.project.crypto.controller;
 import com.project.crypto.config.LoggingConfig;
 import com.project.crypto.dto.AuthCheckDto;
 import com.project.crypto.dto.LoginDTO;
+import com.project.crypto.dto.ResponseDto;
 import com.project.crypto.dto.ResponseLoginDto;
 import com.project.crypto.model.User;
 import com.project.crypto.model.UserDetail;
@@ -39,10 +40,10 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user){
-        String status = authService.register(user);
-        logCryp.logCrypBe.info("status: "+status);
-        return ResponseEntity.ok(status);
+    public ResponseEntity<ResponseDto> register(@RequestBody User user){
+        ResponseDto status = authService.register(user);
+        logCryp.logCrypBe.info("status: "+status.toString());
+        return new ResponseEntity<>(status, HttpStatusCode.valueOf(status.getCode()));
     }
 
     @PostMapping("/check")

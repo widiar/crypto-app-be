@@ -2,6 +2,7 @@ package com.project.crypto.service;
 
 import com.project.crypto.config.LoggingConfig;
 import com.project.crypto.dto.LoginDTO;
+import com.project.crypto.dto.ResponseDto;
 import com.project.crypto.dto.ResponseLoginDto;
 import com.project.crypto.model.Saldo;
 import com.project.crypto.model.User;
@@ -39,23 +40,32 @@ public class AuthService {
                 responseLogin.setSession(session);
                 responseLogin.setRole(user.getRole());
             } else {
-            	logCryp.logCrypBe.error("Password not Match!");
+                logCryp.logCrypBe.error("Password not Match!");
+                responseLogin.setSession("Password salah");
             }
         }else{
-            responseLogin.setSession("Username / password salah");
+            responseLogin.setSession("User tidak ditemukan");
         }
         return responseLogin;
     }
 
-    public String register(User user){
-        user.setPassword(encoder.encode(user.getPassword()));
-        user.setRole("user");
-        Saldo newSaldo = new Saldo();
-        newSaldo.setUser(user);
-        newSaldo.setJumlah(0D);
-        saldoRepository.save(newSaldo);
-        userRepository.save(user);
-        logCryp.logCrypBe.info("Register Success");
-        return "success";
+    public ResponseDto register(User user){
+        User chekcUser = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
+        ResponseDto responseDto = new ResponseDto();
+        if (chekcUser != null) {
+            logCryp.logCrypBe.info("Register Failed");
+            responseDto.setFailed("Username or email already taken");
+        }else{
+            user.setPassword(encoder.encode(user.getPassword()));
+            user.setRole("user");
+            Saldo newSaldo = new Saldo();
+            newSaldo.setUser(user);
+            newSaldo.setJumlah(0D);
+            saldoRepository.save(newSaldo);
+            userRepository.save(user);
+            logCryp.logCrypBe.info("Register Success");
+            responseDto.setSuccess();
+        }
+        return responseDto;
     }
 }
